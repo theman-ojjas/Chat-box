@@ -10,14 +10,17 @@ app.use(express.static(path.join(__dirname+"/public")));
 
 io.on("connection",function(socket){
     socket.on("newuser",function(username){
-        socket.broadcast.emit("update",username + "joined the conversation");
+        socket.broadcast.emit("update",username + " has joined the conversation");
     });
     socket.on("exituser",function(username){
-        socket.broadcast.emit("update",username+"left the conversation");
+        socket.broadcast.emit("update",username+" has left the conversation");
     });
     socket.on("chat",function(message){
         socket.broadcast.emit("chat",message);
     });
 });
 
-server.listen(5500);
+const PORT=5500;
+server.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`);
+});

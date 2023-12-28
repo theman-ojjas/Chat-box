@@ -4,10 +4,19 @@
 
     let uname;
 
-    app.querySelector(".join-screen #join-user").addEventListener("click", function() {
-        console.log("Button clicked");
-        // ... rest of your code
-    });
+    // app.querySelector(".join-screen #join-user").addEventListener("click", function() {
+    //     console.log("Button clicked");
+    //     // ... rest of your code
+    // });
+
+    // socket.on('connect', () => {
+    //     console.log('Connected to server');
+    // });
+      
+    
+    // socket.on('disconnect', () => {
+    //     console.log('Disconnected from server');
+    // });
 
     
     app.querySelector(".join-screen #join-user").addEventListener("click",function(){
@@ -41,6 +50,19 @@
         
     });
 
+    app.querySelector(".chat-screen #exit-chat").addEventListener("click",function(){
+        socket.emit("exituser",uname);
+        window.location.href=window.location.href;
+    });
+
+    socket.on("update",function(update){
+        renderMessage("update",update);
+    });
+
+    socket.on("chat",function(message){
+        renderMessage("other",message);
+    });
+
     function renderMessage(type, message) {
         let messageContainer = app.querySelector(".chat-screen .messages");
         if (type === "my") {
@@ -55,6 +77,7 @@
             messageContainer.appendChild(el);
         } else if (type === "other") {
             let el = document.createElement("div");
+            console.log("messa")
             el.setAttribute("class", "message other-message");
             el.innerHTML = `
                 <div>
@@ -64,6 +87,7 @@
             `;
             messageContainer.appendChild(el);
         } else if (type === "update") {
+            console.log("up date")
             let el = document.createElement("div");
             el.setAttribute("class", "update");
             el.innerText = message;
