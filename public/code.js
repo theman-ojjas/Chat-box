@@ -62,11 +62,7 @@
             username:uname,
             text:message
         });
-        socket.emit("chat",{
-            username:uname,
-            text:message
-
-        });
+        socket.emit("chat",{username:uname,text:message,latitude:latitude,longitude:longitude});
         app.querySelector(".chat-screen #message-input").value="";
         
     });
@@ -148,17 +144,42 @@
         console.log(calculateDistance);
         
         if(calculateDistance<=1.0){
-            // username.set(socketIdo,username);
+            usernameMap .set(socketIdo,username);
+
             console.log("i m in");
         }
     });
+
     
-    socket.on("update",function(update){
-                renderMessage("update",update);
+    socket.on("update",function(data){
+        const { update,latitude,longitude } = data;
+        console.log(update);
+        let lat2=latitude;
+        let lng2=longitude;
+        calculateDistance=distance(lat1,lng1,lat2,lng2);
+        console.log(calculateDistance);
+        
+        if(calculateDistance<=1.0){
+            console.log("i m in update");
+            renderMessage("update",update);
+        }
+       
             });
 
     socket.on("chat",function(message){
-        renderMessage("other",message);
+        
+        // console.log("message");
+        console.log(message.text);
+        let lat2=message.latitude;
+        let lng2=message.longitude;
+        calculateDistance=distance(lat1,lng1,lat2,lng2);
+        console.log(calculateDistance);
+        
+        if(calculateDistance<=1.0){
+            renderMessage("other",message);
+           
+        }
+
     });
 
     // if(isValidDistance(lat1,lng1,lat2,lng2))
