@@ -15,33 +15,21 @@ io.on("connection",function(socket){
     let lat2;
     let lng2;
     socket.on("newuser",function(data){
-
         const{username,latitude,longitude}=data;
-        console.log("entered newuser server")
-
-        socket.broadcast.emit("newClient",{username,socketIdo,latitude, longitude });
-
-        // socket.broadcast.emit("update", username, socketIdo,username+ "has joined the conversation");
-        let update=" someone has joined the conversation"
+        console.log(username + " entered the server")
+        let update=`${username} has joined the conversation` ;
         socket.broadcast.emit("update",{update,latitude,longitude});
-        // console.log(`Current lat2: ${lat2}, Current lng2: ${lng2}`);
     });
-    socket.on("exituser",function(username){
-        socket.broadcast.emit("update",username+" has left the conversation");
+    socket.on("exituser",function(data){
+        const{username,latitude,longitude}=data;
+        console.log(username+" left the server")
+        let update=`${username} has left the conversation` ;
+        socket.broadcast.emit("update",{update,latitude,longitude});
     });
     socket.on("chat",function(message){
-
-        // const{message,latitude,longitude}=data;
-        console.log("i m in server chat")
-        // socket.emit("newClient",{latitude, longitude });
         socket.broadcast.emit("chat",message);
-        // socket.broadcast.emit("chat",{message,latitude,longitude});
     });
-    // socket.on("location",function (data) {
-    //     const { lat1, lng1 } = data;
-    //     socket.emit("getlocation",function(data))
-    //     console.log(`Received location from client - Latitude: ${lat1}, Longitude: ${lng1}`);
-    //   });
+
 });
 
 const PORT=5500;

@@ -1,15 +1,13 @@
 (function(){
     const app=document.querySelector(".app");
     const socket=io();
-
-    
-
     let uname;
     let lat1;
     let lng1;
-    const usernameMap = new Map();
+    
     let socketId=socket.id;
 
+                                //  Comment this for manual input of coordinates  //
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
              lat1 = position.coords.latitude;
@@ -34,23 +32,27 @@
     } else {
         console.error("Geolocation is not available in this browser.");
     }
- 
+                            // . . . . . . . . . . . . . . . . . . . . . . . . . . //
+
+                            // uncomment the code that is commented for manual input.
+
     app.querySelector(".join-screen #join-user").addEventListener("click",function(){
-        console.log("join button clicked");
+        console.log("join-button clicked");
         let username=app.querySelector(".join-screen #username").value;
         let latitude=lat1;
         let longitude=lng1;
+
+        // latitude=app.querySelector(".join-screen #latitude").value;
+        // longitude=app.querySelector(".join-screen #longitude").value;
+
         if(username.length==0||latitude==0||longitude==0){
             return;
         }
         socket.emit("newuser", { username, latitude, longitude });
         uname=username;
-        // lat1=latitude;
-        // lng1=longitude;
+        lat1=latitude;
+        lng1=longitude;
 
-        // // socket.emit("location",{lat1,lng1});
-        // console.log(longitude);
-        // console.log(latitude);
         console.log(username+" has connected");
         app.querySelector(".join-screen").classList.remove("active");
         app.querySelector(".chat-screen").classList.add("active");
@@ -61,13 +63,17 @@
         let username=app.querySelector(".join-screen #username").value;
         let latitude=lat1;
         let longitude=lng1;
+
+    
         
+        // latitude=app.querySelector(".join-screen #latitude").value;
+        // longitude=app.querySelector(".join-screen #longitude").value;
+
         let message= app.querySelector(".chat-screen #message-input").value;
         if (message == null || message.length === 0) {
-
             return;
         }
-        console.log("Button send clicked");
+        console.log("send-button clicked");
         renderMessage("my",{
             username:uname,
             text:message
@@ -78,60 +84,33 @@
     });
 
     app.querySelector(".chat-screen #exit-chat").addEventListener("click",function(){
-        socket.emit("exituser",uname);
-        window.location.href=window.location.href;
-    });
-
-    socket.on("newClient",function(data){
-        const{username,socketIdo,latitude,longitude}=data;
-        console.log(username+" in newclient"+latitude);
-        let lat2=latitude;
-        let lng2=longitude;
-        calculateDistance=distance(lat1,lng1,lat2,lng2);
-        console.log(calculateDistance);
+        let username=uname;
+        let latitude=lat1;
+        let longitude=lng1;
+        socket.emit("exituser",{username, latitude,longitude});
         
-        if(calculateDistance<=1.0){
-            usernameMap .set(socketIdo,username);
-
-            console.log("i m in");
-        }
+        window.location.href=window.location.href;
     });
 
     
     socket.on("update",function(data){
         const { update,latitude,longitude } = data;
-        console.log(update);
         let lat2=latitude;
         let lng2=longitude;
         calculateDistance=distance(lat1,lng1,lat2,lng2);
-        console.log(calculateDistance);
-        
         if(calculateDistance<=1.0){
-            console.log("i m in update");
             renderMessage("update",update);
         }
-       
             });
 
     socket.on("chat",function(message){
-        
-        // console.log("message");
-        console.log(message.text);
         let lat2=message.latitude;
         let lng2=message.longitude;
-        calculateDistance=distance(lat1,lng1,lat2,lng2);
-        console.log(calculateDistance);
-        
+        calculateDistance=distance(lat1,lng1,lat2,lng2);   
         if(calculateDistance<=1.0){
             renderMessage("other",message);
-
         }
-
     });
-
-
-
-
 
     function renderMessage(type, message) {
         let messageContainer = app.querySelector(".chat-screen .messages");
@@ -147,7 +126,6 @@
             messageContainer.appendChild(el);
         } else if (type === "other") {
             let el = document.createElement("div");
-            console.log("messa")
             el.setAttribute("class", "message other-message");
             el.innerHTML = `
                 <div>
@@ -157,7 +135,6 @@
             `;
             messageContainer.appendChild(el);
         } else if (type === "update") {
-            console.log("up date")
             let el = document.createElement("div");
             el.setAttribute("class", "update");
             el.innerText = message;
@@ -166,9 +143,6 @@
         messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight;
     }
 
-    // function getLocation(){
-
-    // }
     function distance(lat1, lng1, lat2, lng2){
         const earthRadius = 6371; // Earth radius in kilometers
 
@@ -202,9 +176,4 @@
        if(distance(lat1, lng1, lat2, lng2)<=1) return true;
        else return false;
     }
-    
-    
-
-    
-    
 })();
