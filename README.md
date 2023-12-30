@@ -35,3 +35,7 @@ Gully Talks is a project that provides a platform for people within a 1 km dista
    localhost:5500 
 
 6. Multiple clients can be made for testing by going into incognitive mode and navigating to the same port.
+
+## ScreenShot
+![Screenshot](https://github.com/theman-ojjas/Chat-box/blob/master/gully_talk_ss.jpg)
+
