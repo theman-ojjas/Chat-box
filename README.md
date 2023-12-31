@@ -26,15 +26,19 @@ Gully Talks is a project that provides a platform for people within a 1 km dista
 
     ```bash
     cd Chat-box
-3. Start the server by writing the following command in the terminal
+3. Install Packages and dependencies;
+      ```bash
+    npm install
+   
+4. Start the server by writing the following command in the terminal
      ```bash
      nodemon server.js
 
-4. Join the talk by Navigating to the following port in chrome:
+5. Join the talk by Navigating to the following port in chrome:
    ```bash
    localhost:5500 
 
-6. Multiple clients can be made for testing by going into incognitive mode and navigating to the same port.
+7. Multiple clients can be made for testing by going into incognitive mode and navigating to the same port.
 
 ## ScreenShot
 ![Screenshot](https://github.com/theman-ojjas/Chat-box/blob/master/gully_talk_ss.jpg)
